@@ -209,6 +209,12 @@ function applyLanguage(){
 }
 $('language').onchange=()=>{currentLang=$('language').value;localStorage.setItem('mwh_language',currentLang);applyLanguage()};
 applyLanguage();
+  if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .catch(error => console.log('Service Worker:', error));
+  });
+}
 </script>
 </body>
 </html>
