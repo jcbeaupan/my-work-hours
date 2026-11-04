@@ -1,0 +1,19 @@
+{
+  "name": "My Work Hours",
+  "short_name": "Work Hours",
+  "description": "Daily work hours tracker in English and Spanish",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f3f6f8",
+  "theme_color": "#173b57",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
