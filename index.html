@@ -1,0 +1,211 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#173b57">
+<title>My Work Hours</title>
+<style>
+:root{--navy:#173b57;--blue:#2878a8;--bg:#f3f6f8;--ink:#20313d;--muted:#687985;--line:#dce5ea;--white:#fff;--green:#16845b;--red:#b64040}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px Arial,sans-serif}
+header{background:linear-gradient(135deg,#173b57,#2878a8);color:white;padding:24px 18px 22px;border-radius:0 0 24px 24px}
+header h1{font-size:25px;margin:0 0 4px}header p{margin:0;color:#dcecf5;font-size:13px}
+main{max-width:760px;margin:0 auto;padding:16px 14px 40px}
+.card{background:white;border:1px solid var(--line);border-radius:17px;padding:16px;margin:0 0 14px;box-shadow:0 3px 12px #1d40500a}
+h2{font-size:17px;margin:0 0 13px}.row{display:flex;gap:10px;align-items:end}.row>*{flex:1;min-width:0}
+label{display:block;font-size:12px;color:var(--muted);font-weight:bold;margin:0 0 5px}
+input,select{width:100%;border:1px solid #cbd7de;border-radius:10px;padding:11px 10px;font:inherit;background:#fff;color:var(--ink);min-height:44px}
+button{border:0;border-radius:10px;padding:11px 14px;font:bold 14px Arial;cursor:pointer}
+.primary{background:var(--blue);color:white}.secondary{background:#eaf1f5;color:var(--navy)}.danger{background:#fff0f0;color:var(--red)}.small{padding:7px 10px;font-size:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:#f0f6f9;border-radius:12px;padding:11px}.stat span{display:block;color:var(--muted);font-size:11px}.stat strong{font-size:20px;color:var(--navy);display:block;margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;color:var(--muted);font-size:11px;font-weight:bold;padding:8px 5px;border-bottom:1px solid var(--line)}td{padding:10px 5px;border-bottom:1px solid #edf1f3;vertical-align:middle}
+td:last-child,th:last-child{text-align:right}.empty{color:var(--muted);font-size:13px;padding:12px 0}
+.pill{display:inline-block;background:#eaf3f8;color:#225b7b;padding:3px 7px;border-radius:99px;font-size:11px}
+.note{font-size:12px;color:var(--muted);line-height:1.45}.total{font-size:24px;font-weight:bold;color:var(--green)}
+.projectline{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid #edf1f3}
+.projectline:last-child{border:0}.projectline span{overflow-wrap:anywhere}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
+@media(max-width:420px){.stats{grid-template-columns:1fr 1fr}.row{gap:7px}.card{padding:14px}td,th{font-size:12px}}
+</style>
+</head>
+<body>
+<header><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><div><h1 data-i18n="appTitle">My Work Hours</h1><p data-i18n="tagline">Daily time tracker · 24-hour clock</p></div><select id="language" aria-label="Language" style="width:auto;min-width:112px;background:#ffffff;color:#173b57;border:0"><option value="en">English</option><option value="es">Español</option></select></div></header>
+<main>
+<section class="card">
+  <div class="row">
+    <div><label for="workDate" data-i18n="workDate">WORK DATE</label><input id="workDate" type="date"></div>
+    <div><label data-i18n="roundedToday">ROUNDED TIME TODAY</label><div class="total" id="dayTotal">0.00 h</div></div>
+  </div>
+  <div class="stats" style="margin-top:13px">
+    <div class="stat"><span data-i18n="activities">Activities</span><strong id="activityCount">0</strong></div>
+    <div class="stat"><span data-i18n="breakLogged">Break time logged</span><strong id="breakTotal">0 min</strong></div>
+    <div class="stat"><span data-i18n="weekTotal">Week total</span><strong id="weekTotal">0.00 h</strong></div>
+  </div>
+</section>
+<section class="card">
+  <h2 data-i18n="projects">Projects</h2>
+  <div class="row">
+    <div><label for="newProject" data-i18n="addProject">ADD A PROJECT</label><input id="newProject" placeholder="Project name"></div>
+    <button class="primary" id="addProject" data-i18n="add">Add</button>
+  </div>
+  <div id="projectList" style="margin-top:10px"></div>
+  <p class="note" data-i18n="projectSaved">Your project list is saved on this device and can be reused every day.</p>
+</section>
+<section class="card">
+  <h2 data-i18n="addActivity">Add work activity</h2>
+  <div style="margin-bottom:10px"><label for="projectSelect" data-i18n="project">PROJECT</label><select id="projectSelect"><option value="">Add a project first</option></select></div>
+  <div class="row">
+    <div><label for="startTime" data-i18n="start">START (24-hour)</label><input id="startTime" type="time" value="09:30"></div>
+    <div><label for="endTime" data-i18n="end">END (24-hour)</label><input id="endTime" type="time" value="10:05"></div>
+  </div>
+  <div class="actions"><button class="primary" id="addActivity" data-i18n="addActivityBtn">Add activity</button></div>
+  <p class="note" data-i18n="activityHelp">Each activity is rounded separately to the nearest 15 minutes. Example: 09:30–10:05 = 0.50 hours.</p>
+</section>
+<section class="card">
+  <h2 data-i18n="meeting">Meeting</h2>
+  <div class="row">
+    <div><label for="meetingStart">START</label><input id="meetingStart" type="time"></div>
+    <div><label for="meetingEnd">END</label><input id="meetingEnd" type="time"></div>
+  </div>
+  <div class="actions"><button class="secondary" id="addMeeting" data-i18n="addMeeting">Add meeting</button></div>
+  <p class="note" data-i18n="meetingHelp">Meetings lasting 10 minutes or less are not counted. Meetings longer than 10 minutes are saved as MEETING and rounded to the nearest 15 minutes.</p>
+</section>
+<section class="card">
+  <h2 data-i18n="logBreak">Log a break (not work time)</h2>
+  <div class="row">
+    <div><label for="breakType" data-i18n="breakType">BREAK TYPE</label><select id="breakType"><option>15-minute break 1</option><option>15-minute break 2</option><option>30-minute lunch</option><option>Other</option></select></div>
+  </div>
+  <div class="row" style="margin-top:9px">
+    <div><label for="breakStart">START</label><input id="breakStart" type="time"></div>
+    <div><label for="breakEnd">END</label><input id="breakEnd" type="time"></div>
+  </div>
+  <div class="actions"><button class="secondary" id="addBreak" data-i18n="saveBreak">Save break</button></div>
+  <p class="note" data-i18n="optionA">Option A: work activities are entered with their actual start and end times, excluding breaks. Breaks are recorded separately for reference and are NOT subtracted again from the activity total.</p>
+</section>
+<section class="card"><h2 data-i18n="activitiesToday">Activities for this day</h2><div id="activityTable" class="empty">No activities yet.</div></section>
+<section class="card"><h2 data-i18n="breaksToday">Breaks for this day</h2><div id="breakTable" class="empty">No breaks logged yet.</div></section>
+<section class="card">
+  <h2 data-i18n="export">Export</h2>
+  <div class="actions">
+    <button class="primary" id="exportCsv" data-i18n="exportDay">Export this day (CSV)</button>
+    <button class="secondary" id="exportBackup" data-i18n="backup">Backup all data (JSON)</button>
+  </div>
+  <p class="note" data-i18n="localData">Data is stored locally in this browser on this device. Use the JSON backup regularly if you need to move or protect your records.</p>
+</section>
+<footer data-i18n="appFooter">My Work Hours · First prototype</footer>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const load = (k,d) => {try{return JSON.parse(localStorage.getItem(k)) ?? d}catch{return d}};
+let projects=load('mwh_projects',[]);
+let activities=load('mwh_activities',[]);
+let breaks=load('mwh_breaks',[]);
+const today=()=>new Date().toLocaleDateString('en-CA');
+$('workDate').value=today();
+function save(){localStorage.setItem('mwh_projects',JSON.stringify(projects));localStorage.setItem('mwh_activities',JSON.stringify(activities));localStorage.setItem('mwh_breaks',JSON.stringify(breaks));render()}
+function mins(t){if(!t)return null;const [h,m]=t.split(':').map(Number);return h*60+m}
+function duration(a,b){let x=mins(a),y=mins(b);if(x===null||y===null)return null;if(y<=x)y+=1440;return y-x}
+function roundedHours(m){return Math.round(m/15)/4}
+function fmtHours(h){return h.toFixed(2)}
+function fmtDuration(m){return currentLang==='es'?`${Math.floor(m/60)} h ${m%60} min`:`${Math.floor(m/60)}h ${m%60}m`}
+function currentDate(){return $('workDate').value||today()}
+function addProject(){
+ const name=$('newProject').value.trim();if(!name)return alert(tr('addProjectPrompt'));
+ if(projects.some(p=>p.toLowerCase()===name.toLowerCase()))return alert(tr('duplicateProject'));
+ projects.push(name);$('newProject').value='';save();
+}
+function editProject(old){const n=prompt(tr('editProjectPrompt'),old);if(n===null)return;const name=n.trim();if(!name)return alert(tr('emptyProject'));if(projects.some(p=>p.toLowerCase()===name.toLowerCase()&&p!==old))return alert(tr('duplicateProject'));projects=projects.map(p=>p===old?name:p);activities=activities.map(a=>a.project===old?{...a,project:name}:a);save()}
+function deleteProject(p){if(!confirm(`${tr('deleteProjectConfirm')} "${p}" ${tr('deleteProjectSuffix')}`))return;projects=projects.filter(x=>x!==p);save()}
+function addActivity(project,start,end,type='Project'){
+ const d=duration(start,end);if(d===null||d<=0)return alert(tr('validTimes'));
+ const date=currentDate();const overlaps=activities.some(a=>a.date===date && Math.max(mins(start),mins(a.start))<Math.min(mins(end),mins(a.end)) && mins(end)>mins(start) && mins(a.end)>mins(a.start));
+ if(overlaps && !confirm(tr('overlap')))return;
+ activities.push({id:String(Date.now()+Math.random()),date,project,start,end,minutes:d,rounded:roundedHours(d),type});
+ save();
+}
+$('addProject').onclick=addProject;
+$('newProject').addEventListener('keydown',e=>{if(e.key==='Enter')addProject()});
+$('addActivity').onclick=()=>{const p=$('projectSelect').value;if(!p)return alert(tr('selectProject'));addActivity(p,$('startTime').value,$('endTime').value)};
+$('addMeeting').onclick=()=>{const s=$('meetingStart').value,e=$('meetingEnd').value,d=duration(s,e);if(d===null||d<=0)return alert(tr('validMeeting'));if(d<=10){alert(`${tr('notCounted')} ${d} ${tr('notCountedSuffix')}`);return;}addActivity('MEETING',s,e,'Meeting')};
+$('addBreak').onclick=()=>{const s=$('breakStart').value,e=$('breakEnd').value,d=duration(s,e);if(d===null||d<=0)return alert(tr('validBreak'));breaks.push({id:String(Date.now()+Math.random()),date:currentDate(),type:$('breakType').value,start:s,end:e,minutes:d});save()};
+function removeActivity(id){if(confirm(tr('deleteActivity'))){activities=activities.filter(a=>a.id!==id);save()}}
+function removeBreak(id){if(confirm(tr('deleteBreak'))){breaks=breaks.filter(b=>b.id!==id);save()}}
+function render(){
+ $('projectSelect').innerHTML=projects.length?projects.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join(''):'<option value="">'+tr('selectProject')+'</option>';
+ $('projectList').innerHTML=projects.length?projects.map(p=>`<div class="projectline"><span>${esc(p)}</span><span><button class="secondary small" data-edit="${attr(p)}">Edit</button> <button class="danger small" data-del="${attr(p)}">Delete</button></span></div>`).join(''):'<div class="empty">'+tr('noProjects')+'</div>';
+ document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>editProject(b.dataset.edit));document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>deleteProject(b.dataset.del));
+ const date=currentDate(),day=activities.filter(a=>a.date===date),dayBreaks=breaks.filter(b=>b.date===date);
+ const sum=day.reduce((s,a)=>s+a.rounded,0),breakM=dayBreaks.reduce((s,b)=>s+b.minutes,0);
+ $('dayTotal').textContent=fmtHours(sum)+' h';$('activityCount').textContent=day.length;$('breakTotal').textContent=breakM+' min';
+ const monday=new Date(date+'T12:00:00');const dow=(monday.getDay()+6)%7;monday.setDate(monday.getDate()-dow);const weekStart=monday.toLocaleDateString('en-CA');const weekEnd=new Date(monday);weekEnd.setDate(weekEnd.getDate()+6);const we=weekEnd.toLocaleDateString('en-CA');
+ $('weekTotal').textContent=fmtHours(activities.filter(a=>a.date>=weekStart&&a.date<=we).reduce((s,a)=>s+a.rounded,0))+' h';
+ $('activityTable').innerHTML=day.length?`<table><thead><tr><th>${tr("dayActivities")}</th><th>${tr("startEnd")}</th><th>${tr("actual")}</th><th>${tr("hours")}</th><th></th></tr></thead><tbody>${day.sort((a,b)=>mins(a.start)-mins(b.start)).map(a=>`<tr><td>${esc(a.project)}${a.type==='Meeting'?` <span class="pill">${tr('meetingTag')}</span>`:''}</td><td>${a.start}–${a.end}</td><td>${fmtDuration(a.minutes)}</td><td><b>${fmtHours(a.rounded)}</b></td><td><button class="danger small" data-rma="${attr(a.id)}">×</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty">'+tr('noActivities')+'</div>';
+ $('breakTable').innerHTML=dayBreaks.length?`<table><thead><tr><th>${tr("breakName")}</th><th>${tr("startEnd")}</th><th>${tr("duration")}</th><th></th></tr></thead><tbody>${dayBreaks.map(b=>`<tr><td>${esc(b.type)}</td><td>${b.start}–${b.end}</td><td>${fmtDuration(b.minutes)}</td><td><button class="danger small" data-rmb="${attr(b.id)}">×</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty">'+tr('noBreaks')+'</div>';
+ document.querySelectorAll('[data-rma]').forEach(b=>b.onclick=()=>removeActivity(b.dataset.rma));document.querySelectorAll('[data-rmb]').forEach(b=>b.onclick=()=>removeBreak(b.dataset.rmb));
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function attr(s){return esc(s)}
+function download(name,content,type){const a=document.createElement('a'),url=URL.createObjectURL(new Blob([content],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+$('workDate').onchange=render;
+$('exportCsv').onclick=()=>{const d=currentDate(),rows=[['Date','Project','Start','End','Actual minutes','Rounded hours'],...activities.filter(a=>a.date===d).map(a=>[a.date,a.project,a.start,a.end,a.minutes,fmtHours(a.rounded)])];const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');download(`work-hours-${d}.csv`,csv,'text/csv')};
+$('exportBackup').onclick=()=>download('my-work-hours-backup.json',JSON.stringify({projects,activities,breaks},null,2),'application/json');
+const translations = {
+en: {
+ appTitle:"My Work Hours", tagline:"Daily time tracker · 24-hour clock", workDate:"WORK DATE",
+ roundedToday:"ROUNDED TIME TODAY", activities:"Activities", breakLogged:"Break time logged",
+ weekTotal:"Week total", projects:"Projects", addProject:"ADD A PROJECT", add:"Add",
+ projectPlaceholder:"Project name", projectSaved:"Your project list is saved on this device and can be reused every day.",
+ addActivity:"Add work activity", project:"PROJECT", start:"START (24-hour)", end:"END (24-hour)",
+ addActivityBtn:"Add activity", activityHelp:"Each activity is rounded separately to the nearest 15 minutes. Example: 09:30–10:05 = 0.50 hours.",
+ meeting:"Meeting", addMeeting:"Add meeting", meetingHelp:"Meetings lasting 10 minutes or less are not counted. Meetings longer than 10 minutes are saved as MEETING and rounded to the nearest 15 minutes.",
+ logBreak:"Log a break (not work time)", breakType:"BREAK TYPE", break1:"15-minute break 1", break2:"15-minute break 2", lunch:"30-minute lunch", other:"Other", saveBreak:"Save break",
+ optionA:"Option A: work activities are entered with their actual start and end times, excluding breaks. Breaks are recorded separately for reference and are NOT subtracted again from the activity total.",
+ activitiesToday:"Activities for this day", breaksToday:"Breaks for this day", export:"Export", exportDay:"Export this day (CSV)", backup:"Backup all data (JSON)",
+ localData:"Data is stored locally in this browser on this device. Use the JSON backup regularly if you need to move or protect your records.",
+ noProjects:"No projects added yet.", noActivities:"No activities yet.", noBreaks:"No breaks logged yet.",
+ edit:"Edit", delete:"Delete", actual:"Actual", hours:"Hours", duration:"Duration", breakName:"Break", startEnd:"Start–End",
+ addProjectPrompt:"Enter a project name.", duplicateProject:"That project already exists.", editProjectPrompt:"Edit project name:",
+ emptyProject:"Project name cannot be empty.", deleteProjectConfirm:"Delete", deleteProjectSuffix:"from the project list? Existing activity records will be kept.",
+ selectProject:"Add or select a project first.", validTimes:"Please enter valid start and end times.", overlap:"This time overlaps another activity. Save anyway?",
+ deleteActivity:"Delete this activity?", deleteBreak:"Delete this break?", validMeeting:"Enter valid meeting times.", notCounted:"Meeting is", notCountedSuffix:"minutes. It is not counted (10 minutes or less).",
+ validBreak:"Enter valid break times.", dayActivities:"Project", meetingTag:"MEETING", totalHours:"h", minutes:"min", appFooter:"My Work Hours · First prototype"
+},
+es: {
+ appTitle:"Mis Horas de Trabajo", tagline:"Registro diario · Reloj de 24 horas", workDate:"FECHA DE TRABAJO",
+ roundedToday:"HORAS REDONDEADAS HOY", activities:"Actividades", breakLogged:"Tiempo de descansos",
+ weekTotal:"Total semanal", projects:"Proyectos", addProject:"AGREGAR PROYECTO", add:"Agregar",
+ projectPlaceholder:"Nombre del proyecto", projectSaved:"Tu lista de proyectos se guarda en este dispositivo para reutilizarla cada día.",
+ addActivity:"Agregar actividad laboral", project:"PROYECTO", start:"INICIO (24 horas)", end:"FIN (24 horas)",
+ addActivityBtn:"Agregar actividad", activityHelp:"Cada actividad se redondea por separado al cuarto de hora más cercano. Ejemplo: 09:30–10:05 = 0.50 horas.",
+ meeting:"Reunión", addMeeting:"Agregar reunión", meetingHelp:"Las reuniones de 10 minutos o menos no se contabilizan. Las reuniones de más de 10 minutos se guardan como REUNIÓN y se redondean al cuarto de hora más cercano.",
+ logBreak:"Registrar descanso (no es tiempo trabajado)", breakType:"TIPO DE DESCANSO", break1:"Descanso de 15 minutos 1", break2:"Descanso de 15 minutos 2", lunch:"Almuerzo de 30 minutos", other:"Otro", saveBreak:"Guardar descanso",
+ optionA:"Opción A: las actividades se ingresan con sus horas reales de inicio y fin, excluyendo los descansos. Los descansos se registran por separado como referencia y NO se vuelven a descontar del total de actividades.",
+ activitiesToday:"Actividades de este día", breaksToday:"Descansos de este día", export:"Exportar", exportDay:"Exportar este día (CSV)", backup:"Copia de seguridad de todos los datos (JSON)",
+ localData:"Los datos se guardan localmente en este navegador y dispositivo. Haz copias JSON regularmente para proteger o trasladar tus registros.",
+ noProjects:"Todavía no hay proyectos.", noActivities:"Todavía no hay actividades.", noBreaks:"Todavía no hay descansos registrados.",
+ edit:"Editar", delete:"Eliminar", actual:"Real", hours:"Horas", duration:"Duración", breakName:"Descanso", startEnd:"Inicio–Fin",
+ addProjectPrompt:"Escribe el nombre de un proyecto.", duplicateProject:"Ese proyecto ya existe.", editProjectPrompt:"Editar nombre del proyecto:",
+ emptyProject:"El nombre del proyecto no puede estar vacío.", deleteProjectConfirm:"¿Eliminar", deleteProjectSuffix:"de la lista de proyectos? Los registros de actividades existentes se conservarán.",
+ selectProject:"Primero agrega o selecciona un proyecto.", validTimes:"Ingresa horas de inicio y fin válidas.", overlap:"Este horario se superpone con otra actividad. ¿Deseas guardarlo?",
+ deleteActivity:"¿Eliminar esta actividad?", deleteBreak:"¿Eliminar este descanso?", validMeeting:"Ingresa horarios válidos para la reunión.", notCounted:"La reunión dura", notCountedSuffix:"minutos. No se contabiliza (10 minutos o menos).",
+ validBreak:"Ingresa horarios válidos para el descanso.", dayActivities:"Proyecto", meetingTag:"REUNIÓN", totalHours:"h", minutes:"min", appFooter:"Mis Horas de Trabajo · Primera versión"
+}
+};
+let currentLang = localStorage.getItem('mwh_language') || 'es';
+function tr(key){return translations[currentLang][key] || translations.en[key] || key;}
+function applyLanguage(){
+ document.documentElement.lang=currentLang;
+ $('language').value=currentLang;
+ document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=tr(el.dataset.i18n));
+ $('newProject').placeholder=tr('projectPlaceholder');
+ $('breakType').innerHTML=`<option>${tr('break1')}</option><option>${tr('break2')}</option><option>${tr('lunch')}</option><option>${tr('other')}</option>`;
+ $('breakType').value=tr('break1');
+ render();
+}
+$('language').onchange=()=>{currentLang=$('language').value;localStorage.setItem('mwh_language',currentLang);applyLanguage()};
+applyLanguage();
+</script>
+</body>
+</html>
